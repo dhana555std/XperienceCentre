@@ -1,0 +1,19 @@
+{
+  "name": "llm-rest-api",
+  "version": "1.0.0",
+  "description": "Provider-switchable LangChain REST API for text generation",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "dependencies": {
+    "@langchain/anthropic": "^0.3.16",
+    "@langchain/google-genai": "^0.1.11",
+    "@langchain/ollama": "^0.2.0",
+    "@langchain/openai": "^0.4.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2"
+  }
+}
