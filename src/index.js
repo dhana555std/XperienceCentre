@@ -10,6 +10,7 @@ import {
   getSupportedProviders,
 } from "./llm.js";
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
+import cors from "cors";
 
 dotenv.config();
 
@@ -17,21 +18,31 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
 const port = Number(process.env.PORT) || 3000;
-const systemPromptPath = path.resolve(__dirname, "./prompts/accion-system-prompt.md");
+const systemPromptPath = path.resolve(
+  __dirname,
+  "./prompts/accion-system-prompt.md",
+);
 const systemPrompt = readFileSync(systemPromptPath, "utf8").trim();
 
 app.use(express.json());
-app.use((_request, response, next) => {
-  response.header("Access-Control-Allow-Origin", "*");
-  response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-  response.header("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
+app.use(cors());
+// app.use((_request, response, next) => {
+//   response.header("Access-Control-Allow-Origin", "*");
+//   response.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content-Type, Accept, Authorization",
+//   );
+//   response.header(
+//     "Access-Control-Allow-Methods",
+//     "GET,POST,PUT,PATCH,DELETE,OPTIONS",
+//   );
 
-  if (_request.method === "OPTIONS") {
-    return response.sendStatus(204);
-  }
+//   if (_request.method === "OPTIONS") {
+//     return response.sendStatus(204);
+//   }
 
-  return next();
-});
+//   return next();
+// });
 
 app.get("/health", (_request, response) => {
   response.status(200).json({
@@ -71,14 +82,13 @@ app.post("/api/generate", async (request, response) => {
     ]);
 
     return response.status(200).json({
-      audio: result.content,
+      response: result.content,
       images: [],
-      video: []
+      video: [],
     });
   } catch (error) {
     return response.status(500).json({
-      message:
-        "Failed to generate a response from the configured LLM.",
+      message: "Failed to generate a response from the configured LLM.",
       error: error instanceof Error ? error.message : "Unknown error",
     });
   }
