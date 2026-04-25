@@ -71,9 +71,9 @@ app.post("/api/generate", async (request, response) => {
     ]);
 
     return response.status(200).json({
-      provider: getProvider(),
-      model: getActiveModelName(),
-      response: result.content,
+      audio: result.content,
+      images: [],
+      video: []
     });
   } catch (error) {
     return response.status(500).json({
